@@ -40,5 +40,6 @@ describe TransitionValidator do
     user.state = "voided"
     user.should_not be_valid
     user.errors[:state].should_not be_empty
+    user.errors[:state].first.should == "can not be transitioned to voided"
   end
 end

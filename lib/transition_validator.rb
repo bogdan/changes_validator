@@ -9,7 +9,7 @@ class TransitionValidator < ActiveModel::EachValidator
     transitions = options
     start = changes.first
     destination = value
-    message = options[:message] || "can not be transitioned from #{start.inspect} to #{destination.inspect}"
+    message = options[:message] || :transition
 
     allowed_transitions = transitions[start]
     unless allowed_transitions
@@ -28,3 +28,4 @@ class TransitionValidator < ActiveModel::EachValidator
 
 end
 
+I18n.load_path << File.expand_path('../../locales/en.yml', __FILE__)
