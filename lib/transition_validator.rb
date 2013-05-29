@@ -4,9 +4,10 @@ class TransitionValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
     ensure_supports_dirty(record)
-    return unless record.changes[attribute]
+    changes = record.changes[attribute.to_s]
+    return unless changes
     transitions = options
-    start = record.changes[attribute.to_s].first
+    start = changes.first
     destination = value
     message = options[:message] || "can not be transitioned from #{start.inspect} to #{destination.inspect}"
 
@@ -14,7 +15,7 @@ class TransitionValidator < ActiveModel::EachValidator
     unless allowed_transitions
       return record.errors.add(attribute, message)
     end
-    unless Array(allowed_transitions).map(&:to_sym).include?(destination.to_sym)
+    unless Array(allowed_transitions).map {|s| s.to_s }.include?(destination.to_s)
       return record.errors.add(attribute, message)
     end
   end
