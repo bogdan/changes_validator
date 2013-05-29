@@ -26,6 +26,7 @@ class TransitionValidator < ActiveModel::EachValidator
     end
   end
 
+  class ConfigurationError < Exception; end
 end
 
 I18n.load_path << File.expand_path('../../locales/en.yml', __FILE__)

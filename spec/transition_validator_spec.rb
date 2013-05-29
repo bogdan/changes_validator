@@ -42,4 +42,16 @@ describe TransitionValidator do
     user.errors[:state].should_not be_empty
     user.errors[:state].first.should == "can not be transitioned to voided"
   end
+
+
+  it "should raise exception when model don't support dirty" do
+    klass = Class.new {
+      include ActiveModel::Validations
+      attr_accessor :state
+      validates :state, :transition => {nil => [:pending, :approved], :pending => [:approved, :voided], :voided => :deleted}
+    }
+    proc  {
+      klass.new.valid?
+    }.should raise_error(TransitionValidator::ConfigurationError)
+  end
 end
