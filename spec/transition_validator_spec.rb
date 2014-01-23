@@ -26,7 +26,7 @@ end
 
 describe TransitionValidator do
   before do
-    User._validators.clear
+    User.clear_validators! 
   end
   let!(:user) { User.new }
   it "should work" do
