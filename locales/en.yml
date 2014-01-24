@@ -2,4 +2,4 @@ en:
   errors:
     # The values :model, :attribute, :value and :old_value are always available for interpolation
     messages:
-      transition: "can not be transitioned to %{value}"
+      transition: "can't be transitioned to %{value}"

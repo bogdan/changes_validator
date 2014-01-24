@@ -5,5 +5,5 @@ require 'bundler/setup'
 require 'transition_validator' # and any other gems you need
 
 RSpec.configure do |config|
-  # some (optional) config here
+ I18n.enforce_available_locales = true
 end

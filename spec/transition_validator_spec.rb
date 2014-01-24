@@ -15,9 +15,18 @@ class User
     @state = val
   end
 
-  def save
+  def save!
+    raise 'invalid' unless valid?
     @previously_changed = changes
     @changed_attributes.clear
+  end
+
+  def truthly?
+    true
+  end
+
+  def falsy?
+    false
   end
 
 
@@ -46,7 +55,7 @@ describe TransitionValidator do
     user.state = "voided"
     user.should_not be_valid
     user.errors[:state].should_not be_empty
-    user.errors[:state].first.should == "can not be transitioned to voided"
+    user.errors[:state].first.should == "can't be transitioned to voided"
   end
 
 
@@ -66,5 +75,38 @@ describe TransitionValidator do
     user.should_not be_valid
     user.errors[:state].should_not be_empty
     user.errors[:state].first.should == "can not be transitioned like this"
+  end
+  it "should be able to use old_value interpolation in custom message" do
+    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}, :message => "can not be transitioned from %{old_value} to %{value}"}
+    user.state = 'pending'
+    user.save!
+    user.state = 'declined'
+    user.should_not be_valid
+    user.errors[:state].should_not be_empty
+    user.errors[:state].first.should == "can not be transitioned from pending to declined"
+  end
+  it "should be able to use allow_nil option" do
+    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :allow_nil => true
+    user.state = 'pending'
+    user.save!
+    user.state = nil
+    user.should be_valid
+  end
+  it "should be able to use allow_blank option" do
+    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :allow_blank => true
+    user.state = 'pending'
+    user.save!
+    user.state = ' '
+    user.should be_valid
+  end
+  it "should be able to use if option" do
+    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :if => :falsy?
+    user.state = 'approved'
+    user.should be_valid
+  end
+  it "should be able to use unless option" do
+    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :unless => :truthly?
+    user.state = 'approved'
+    user.should be_valid
   end
 end

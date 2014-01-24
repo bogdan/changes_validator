@@ -14,11 +14,10 @@ class TransitionValidator < ActiveModel::EachValidator
     transitions = options[:with]
     start = changes.first
     destination = value
-    message = options[:message] || :transition
 
     allowed_transitions = transitions[start]
     if !allowed_transitions || !Array(allowed_transitions).map {|s| s.to_s }.include?(destination.to_s)
-      record.errors.add(attribute, message, :value_was => start)
+      record.errors.add(attribute, :transition, :old_value => start, :message => options[:message])
     end
   end
 
