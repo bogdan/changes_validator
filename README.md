@@ -31,24 +31,29 @@ If the state machine's main goal is to validate transitions than let's implement
 
 ``` ruby
 class Reward < AR::Base
-  validates :state, :transition => { 
+  validates! :state, :transition => { 
     nil => [:pending], # Initial state is always pending
-    :pending => [:approved, :rejected], # Pending can be transitioned to to paid and delivered
-    :approved => :paid # Delivered can only be transitioned to paid
+    :pending => [:approved, :rejected], # Pending can be transitioned to to approved and rejected
+    :approved => :paid # Approved can only be transitioned to paid
   }
 end
 ```
 
+Recommended to use with strict validation method: `validates!` as wrong state transition use to be programmer mistake but not user input mistake.
+In this case exception will be raise and logged.
+
+
 ### Advanced Options
 
-* `:message` - validation message.  Can accept 
+* `:message` - validation message.  Can have %{value} and %{old\_value} interpolation variables.
   * Default: "Can not be transitioned to %{value}"
   * Example: "Can not be transitioned from %{old\_value} to %{value}"
 * `:allow_nil` - don't apply validator if value is nil
 * `:allow_blank` - don't apply validator if value is blank
 * `:if` - only apply validator if specified method return true
 * `:unless` - only apply validator if specified method return false
-* `:strict` - if true this validator will always raise exception when record is invalid
+* `:strict` - if true this validator will always raise  when record is invalid
+  * Default:
   
 
 
