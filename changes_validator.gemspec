@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'transition_validator/version'
+require 'changes_validator/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "transition_validator"
-  spec.version       = TransitionValidator::VERSION
+  spec.name          = "changes_validator"
+  spec.version       = ChangesValidator::VERSION
   spec.authors       = ["Bogdan Gusiev"]
   spec.email         = ["agresso@gmail.com"]
   spec.description   = %q{ActiveModel validator that acts like state machine}
-  spec.summary       = %q{This validator allows to specify a mapping of allowed transitions for given attribute and validate that this attribute can only be transfered according to transitions map}
-  spec.homepage      = "https://github.com/bogdan/transition_validator"
+  spec.summary       = %q{This validator allows to specify a mapping of allowed changess for given attribute and validate that this attribute can only be transfered according to changess map}
+  spec.homepage      = "https://github.com/bogdan/changes_validator"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

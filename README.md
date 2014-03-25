@@ -1,12 +1,12 @@
-# TransitionValidator
+# ChangesValidator
 
-TransitionValidator is the most minimalistic state machine implementation focused on validating a state transition rather than define API methods and logic.
+ChangesValidator is the most minimalistic state machine implementation focused on validating a state changes rather than define API methods and logic.
 
 
-## Why TransitionValidator?
+## Why ChangesValidator?
 
 The best way to define API and logic in Ruby is using Ruby.
-TransitionValidator does only validation that Object can move from one state to another.
+ChangesValidator does only validation that Object can move from one state to another.
 
 ## Dependencies
 
@@ -16,7 +16,7 @@ ActiveModel
 
 Add this line to your application's Gemfile:
 
-    gem 'transition_validator'
+    gem 'changes_validator'
 
 And then execute:
 
@@ -27,27 +27,27 @@ And then execute:
 
 ### Basic setup
 
-If the state machine's main goal is to validate transitions than let's implement it as a validation:
+If the state machine's main goal is to validate changess than let's implement it as a validation:
 
 ``` ruby
 class Reward < AR::Base
-  validates! :state, :transition => { 
+  validates! :state, :changes => { 
     nil => [:pending], # Initial state is always pending
-    :pending => [:approved, :rejected], # Pending can be transitioned to to approved and rejected
-    :approved => :paid # Approved can only be transitioned to paid
+    :pending => [:approved, :rejected], # Pending can be changesed to to approved and rejected
+    :approved => :paid # Approved can only be changesed to paid
   }
 end
 ```
 
-Recommended to use with strict validation method: `validates!` as wrong state transition use to be programmer mistake but not user input mistake.
+Recommended to use with strict validation method: `validates!` as wrong state changes use to be programmer mistake but not user input mistake.
 In this case exception will be raise and logged.
 
 
 ### Advanced Options
 
 * `:message` - validation message.  Can have %{value} and %{old\_value} interpolation variables.
-  * Default: "Can not be transitioned to %{value}"
-  * Example: "Can not be transitioned from %{old\_value} to %{value}"
+  * Default: "Can not be changesed to %{value}"
+  * Example: "Can not be changesed from %{old\_value} to %{value}"
 * `:allow_nil` - don't apply validator if value is nil
 * `:allow_blank` - don't apply validator if value is blank
 * `:if` - only apply validator if specified method return true

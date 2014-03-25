@@ -1,6 +1,6 @@
 require "active_model"
 
-class TransitionValidator < ActiveModel::EachValidator
+class ChangesValidator < ActiveModel::EachValidator
 
   def initialize(*)
     super
@@ -11,19 +11,19 @@ class TransitionValidator < ActiveModel::EachValidator
     ensure_supports_dirty(record)
     changes = record.changes[attribute.to_s]
     return unless changes
-    transitions = options[:with]
+    changess = options[:with]
     start = changes.first
     destination = value
 
-    allowed_transitions = transitions[start]
-    if !allowed_transitions || !Array(allowed_transitions).map {|s| s.to_s }.include?(destination.to_s)
-      record.errors.add(attribute, :transition, :old_value => start, :message => options[:message])
+    allowed_changess = changess[start]
+    if !allowed_changess || !Array(allowed_changess).map {|s| s.to_s }.include?(destination.to_s)
+      record.errors.add(attribute, :changes, :old_value => start, :message => options[:message])
     end
   end
 
   def ensure_supports_dirty(record)
     unless record.respond_to?(:changes)
-      raise ConfigurationError, "TransitionValidator can only be applied to model with dirty support (ActiveModel::Dirty)"
+      raise ConfigurationError, "ChangesValidator can only be applied to model with dirty support (ActiveModel::Dirty)"
     end
   end
 

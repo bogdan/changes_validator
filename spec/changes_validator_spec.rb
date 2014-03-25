@@ -33,7 +33,7 @@ class User
 end
 
 
-describe TransitionValidator do
+describe ChangesValidator do
   before do
     User.clear_validators! 
   end
@@ -42,20 +42,20 @@ describe TransitionValidator do
     user.should be_valid
   end
 
-  it "should support state change according to transitions table" do
-    User.validates :state, :transition => {nil => [:pending, :approved]}
+  it "should support state change according to changess table" do
+    User.validates :state, :changes => {nil => [:pending, :approved]}
     user.state = "pending"
     user.should be_valid
     user.state = "approved"
     user.should be_valid
   end
 
-  it "should return record invalid if transitioned to wrong state" do
-    User.validates :state, :transition => {nil => [:pending, :approved]}
+  it "should return record invalid if changesed to wrong state" do
+    User.validates :state, :changes => {nil => [:pending, :approved]}
     user.state = "voided"
     user.should_not be_valid
     user.errors[:state].should_not be_empty
-    user.errors[:state].first.should == "can't be transitioned to voided"
+    user.errors[:state].first.should == "can't be changesed to voided"
   end
 
 
@@ -63,49 +63,49 @@ describe TransitionValidator do
     klass = Class.new {
       include ActiveModel::Validations
       attr_accessor :state
-      validates :state, :transition => {nil => :pending}
+      validates :state, :changes => {nil => :pending}
     }
     proc  {
       klass.new.valid?
-    }.should raise_error(TransitionValidator::ConfigurationError)
+    }.should raise_error(ChangesValidator::ConfigurationError)
   end
   it "should be able to use custom message" do
-    User.validates :state, :transition => {:with => {nil => [:pending, :approved]}, :message => "can not be transitioned like this"}
+    User.validates :state, :changes => {:with => {nil => [:pending, :approved]}, :message => "can not be changesed like this"}
     user.state = 'declined'
     user.should_not be_valid
     user.errors[:state].should_not be_empty
-    user.errors[:state].first.should == "can not be transitioned like this"
+    user.errors[:state].first.should == "can not be changesed like this"
   end
   it "should be able to use old_value interpolation in custom message" do
-    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}, :message => "can not be transitioned from %{old_value} to %{value}"}
+    User.validates :state, :changes => {:with => {nil => :pending, :pending => [:approved]}, :message => "can not be changesed from %{old_value} to %{value}"}
     user.state = 'pending'
     user.save!
     user.state = 'declined'
     user.should_not be_valid
     user.errors[:state].should_not be_empty
-    user.errors[:state].first.should == "can not be transitioned from pending to declined"
+    user.errors[:state].first.should == "can not be changesed from pending to declined"
   end
   it "should be able to use allow_nil option" do
-    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :allow_nil => true
+    User.validates :state, :changes => {:with => {nil => :pending, :pending => [:approved]}}, :allow_nil => true
     user.state = 'pending'
     user.save!
     user.state = nil
     user.should be_valid
   end
   it "should be able to use allow_blank option" do
-    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :allow_blank => true
+    User.validates :state, :changes => {:with => {nil => :pending, :pending => [:approved]}}, :allow_blank => true
     user.state = 'pending'
     user.save!
     user.state = ' '
     user.should be_valid
   end
   it "should be able to use if option" do
-    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :if => :falsy?
+    User.validates :state, :changes => {:with => {nil => :pending, :pending => [:approved]}}, :if => :falsy?
     user.state = 'approved'
     user.should be_valid
   end
   it "should be able to use unless option" do
-    User.validates :state, :transition => {:with => {nil => :pending, :pending => [:approved]}}, :unless => :truthly?
+    User.validates :state, :changes => {:with => {nil => :pending, :pending => [:approved]}}, :unless => :truthly?
     user.state = 'approved'
     user.should be_valid
   end
