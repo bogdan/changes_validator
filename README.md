@@ -33,8 +33,8 @@ If the state machine's main goal is to validate changess than let's implement it
 class Reward < AR::Base
   validates! :state, :changes => { 
     nil => [:pending], # Initial state is always pending
-    :pending => [:approved, :rejected], # Pending can be changesed to to approved and rejected
-    :approved => :paid # Approved can only be changesed to paid
+    :pending => [:approved, :rejected], # Pending can be changed to to approved and rejected
+    :approved => :paid # Approved can only be changed to paid
   }
 end
 ```
@@ -46,8 +46,8 @@ In this case exception will be raise and logged.
 ### Advanced Options
 
 * `:message` - validation message.  Can have %{value} and %{old\_value} interpolation variables.
-  * Default: "Can not be changesed to %{value}"
-  * Example: "Can not be changesed from %{old\_value} to %{value}"
+  * Default: "Can not be changed to %{value}"
+  * Example: "Can not be changed from %{old\_value} to %{value}"
 * `:allow_nil` - don't apply validator if value is nil
 * `:allow_blank` - don't apply validator if value is blank
 * `:if` - only apply validator if specified method return true
